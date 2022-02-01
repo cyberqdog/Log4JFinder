@@ -11,12 +11,12 @@
 # Get hostname and IP address
 hostname=`hostname`
 hostIp=`hostname -I | sed 's/ *$//g'`
-header="hostname, IP, library, version, fileName, fileSize, md5, directory"
+header="hostname, IP, library, version, fileName, fileSize, sum, directory"
 
 while getopts 'ch:i:s:' OPTION; do
     case "$OPTION" in
         c)
-            header="hostname, IP, library, version, fileName, fileSize, md5, directory, bytecodFileName"
+            header="hostname, IP, library, version, fileName, fileSize, sum, directory, bytecodFileName"
             contents=1
             if ! hash jar 2>/dev/null; then
                 echo "-c optioin requires that the jar be in the path. jar not found. Exiting."
@@ -64,8 +64,8 @@ do
   # Get the file size
   fileSizeBytes=`du -b "${fullPathToJarFile}" | cut -f1`    
 
-  # Get the MD5 sum of the file
-  sum=`md5sum ${fullPathToJarFile} | awk {'print $1'}`
+  # Get the checksum of the file
+  sum=`sha256sum ${fullPathToJarFile} | awk {'print $1'}`
 
   # Extract the directory name
   dirName="$(dirname "${fullPathToJarFile}")"
